@@ -1,0 +1,23 @@
+{
+  "DatabaseManage": {
+    "MongoDB": {
+      "RichieMongo": {
+        "Host": "localhost",
+        "Port": "27017",
+        "User": "",
+        "Password": "",
+        "Database": "my_test_db"
+      }
+  },
+    "Redis": {
+      "RichieRedis": {
+        "Host": "localhost",
+        "Port": "6379",
+        "Password": "",
+        "Database": 0
+      }
+    }
+  }
+
+
+}
