@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Richie_tester/internal/config"
+	"Byside/service/internal/config"
 	"context"
 	"github.com/go-redis/redis/v8"
 	"log"

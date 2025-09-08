@@ -1,7 +1,7 @@
 package database
 
 import (
-	config "Richie_tester/internal/config"
+	"Byside/service/internal/config"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -10,7 +10,7 @@ import (
 )
 
 func newMongoDB(ctx context.Context, dbName string, db config.MongoDB) *mongo.Database {
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s", db.User, db.Password, db.Host, db.Port, db.Database)
+	uri := fmt.Sprintf("mongodb://%s:%s/%s", db.Host, db.Port, db.Database)
 	clientOptions := options.Client()
 	clientOptions.ApplyURI(uri)
 	client, err := mongo.Connect(ctx, clientOptions)

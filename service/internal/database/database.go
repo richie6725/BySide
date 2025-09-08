@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Richie_tester/internal/config"
+	"Byside/service/internal/config"
 	"context"
 	"github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,14 +13,14 @@ const (
 	redisLocal = "RichieRedis"
 )
 
-type DBOut struct {
+type BysideOut struct {
 	dig.Out
-	MongoLocal *mongo.Database
-	RedisLocal *redis.Client
+	MongoLocal *mongo.Database `name:"mongo_byside"`
+	RedisLocal *redis.Client   `name:"redis_byside"`
 }
 
-func NewDB(ctx context.Context, dbms config.DatabaseManage) DBOut {
-	return DBOut{
+func NewByside(ctx context.Context, dbms config.DatabaseManageSystem) BysideOut {
+	return BysideOut{
 		MongoLocal: newMongoDB(ctx, mongoLocal, dbms.MongoDBSystem[mongoLocal]),
 
 		RedisLocal: newRedis(ctx, redisLocal, dbms.RedisServer[redisLocal]),

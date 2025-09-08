@@ -1,5 +1,5 @@
 {
-  "DatabaseManage": {
+  "DatabaseManageSystem": {
     "MongoDB": {
       "RichieMongo": {
         "Host": "localhost",
@@ -8,7 +8,7 @@
         "Password": "",
         "Database": "my_test_db"
       }
-  },
+    },
     "Redis": {
       "RichieRedis": {
         "Host": "localhost",
@@ -17,7 +17,9 @@
         "Database": 0
       }
     }
+  },
+
+  "service_address": {
+    "Byside": ":8000"
   }
-
-
 }

@@ -9,8 +9,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-func NewServer() Server {
-	server := Server{}
+func NewByside() BysideServer {
+	server := BysideServer{}
 	buildconfig(&server, configPath)
 	return server
 }
