@@ -16,7 +16,7 @@ const (
 
 type AclDao interface {
 	Get(ctx context.Context, user aclDaoModel.User) (*aclDaoModel.User, error)
-	Update(ctx context.Context, user aclDaoModel.User) error
+	Update(ctx context.Context, query aclDaoModel.Query) error
 }
 
 func New(db *mongo.Database) AclDao {
@@ -52,23 +52,46 @@ func (dao *aclDao) Get(ctx context.Context, user aclDaoModel.User) (*aclDaoModel
 
 }
 
-func (dao *aclDao) Update(ctx context.Context, model aclDaoModel.User) error {
+//寫入單筆
+//func (dao *aclDao) Update(ctx context.Context, model aclDaoModel.User) error {
+//
+//	filter := mongoDao.NewMatchBuilder().
+//		AddEqual(aclDaoModel.Username, model.Username).Generate()
+//
+//	if len(filter) == 0 {
+//		return fmt.Errorf("missing pk, model: %+v", model)
+//	}
+//	doc := bson.M{"$set": model}
+//
+//	output, err := dao.collection.UpdateOne(ctx, filter, doc, options.Update().SetUpsert(true))
+//	fmt.Printf("MatchedCount: %d, ModifiedCount: %d, UpsertedID: %v\n",
+//		output.MatchedCount,
+//		output.ModifiedCount,
+//		output.UpsertedID,
+//	)
+//	return err
+//}
 
-	filter := mongoDao.NewMatchBuilder().
-		AddEqual(aclDaoModel.Username, model.Username).Generate()
+func (dao *aclDao) Update(ctx context.Context, query aclDaoModel.Query) error {
 
-	if len(filter) == 0 {
-		return fmt.Errorf("missing pk, model: %+v", model)
+	writes := make([]mongo.WriteModel, len(query.BulkUserArgs))
+
+	for i := range writes {
+		filter := mongoDao.NewMatchBuilder().
+			AddEqual(aclDaoModel.Username, query.BulkUserArgs[i].Username).Generate()
+		if len(filter) == 0 {
+			return fmt.Errorf("missing pk, model: %+v", query.BulkUserArgs[i])
+		}
+		doc := bson.M{"$set": query.BulkUserArgs[i]}
+		writes[i] = mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(doc).SetUpsert(true)
+
 	}
-	doc := bson.M{"$set": model}
 
-	output, err := dao.collection.UpdateOne(ctx, filter, doc, options.Update().SetUpsert(true))
-	fmt.Printf("MatchedCount: %d, ModifiedCount: %d, UpsertedID: %v\n",
-		output.MatchedCount,
-		output.ModifiedCount,
-		output.UpsertedID,
-	)
-	return err
+	_, err := dao.collection.BulkWrite(ctx, writes, options.BulkWrite().SetOrdered(false))
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func buildMatchQueries(user aclDaoModel.User) []bson.E {

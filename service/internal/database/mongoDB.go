@@ -22,5 +22,5 @@ func newMongoDB(ctx context.Context, dbName string, db config.MongoDB) *mongo.Da
 	}
 	log.Printf("Connected to MongoDB: %s", dbName)
 
-	return client.Database(dbName)
+	return client.Database(db.Database)
 }

@@ -11,30 +11,35 @@ func (f FieldName) String() string {
 }
 
 const (
-	Username  FieldName = "username"
-	Password  FieldName = "password"
-	Roles     FieldName = "roles"
-	CreatedAt FieldName = "created_at"
-	UpdatedAt FieldName = "updated_at"
+	Username     FieldName = "username"
+	Password     FieldName = "password"
+	MobileNumber FieldName = "mobile_number"
+	Email        FieldName = "email"
+	Sex          FieldName = "sex"
+	Birthday     FieldName = "birthday"
+	CreatedAt    FieldName = "created_at"
 )
 
 type User struct {
-	Username  string    `bson:"username" json:"username"`
-	Password  string    `bson:"password,omitempty" json:"-"`
-	Roles     []string  `bson:"roles" json:"roles"` // ex: ["admin", "editor"]
-	CreatedAt time.Time `bson:"created_at" json:"created_at"`
-	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
-}
-
-type Role struct {
-	Name        string   `bson:"name" json:"name"` // ex: "admin"
-	Permissions []string `bson:"permissions" json:"permissions"`
+	Username     string    `bson:"username" json:"username"`
+	Password     string    `bson:"password,omitempty" json:"password"`
+	MobileNumber string    `bson:"mobile_number" json:"mobile_number"`
+	Email        string    `bson:"email" json:"email"`
+	Sex          string    `bson:"sex" json:"sex"`
+	Birthday     string    `bson:"birthday" json:"birthday"`
+	CreatedAt    time.Time `bson:"created_at" json:"created_at"`
 }
 
 type Query struct {
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	Roles     []string  `json:"roles"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	BulkUserArgs []BulkUserArg
+	CreatedAt    time.Time
+}
+
+type BulkUserArg struct {
+	Username     string `json:"username"`
+	Password     string `bson:"password,omitempty" json:"password"`
+	MobileNumber string `bson:"mobile_number" json:"mobile_number"`
+	Email        string `bson:"email" json:"email"`
+	Sex          string `bson:"sex" json:"sex"`
+	Birthday     string `bson:"birthday" json:"birthday"`
 }

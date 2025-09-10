@@ -10,7 +10,7 @@ type GetReply struct {
 	User aclDaoModel.User
 }
 type UpdateArgs struct {
-	User aclDaoModel.User
+	Query aclDaoModel.Query
 }
 
 type UpdateReply struct{}

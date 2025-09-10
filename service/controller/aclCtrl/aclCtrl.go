@@ -1,6 +1,7 @@
 package aclCtrl
 
 import (
+	aclDaoModel "Byside/service/dao/daoModels/acl"
 	aclMongoDao "Byside/service/dao/mongoDao/acl"
 	aclRedisDao "Byside/service/dao/redisDao/acl"
 	boAcl "Byside/service/internal/model/bo/acl"
@@ -23,7 +24,7 @@ type aclCtrlPack struct {
 
 type AclCtrl interface {
 	Get(ctx context.Context, args *boAcl.GetArgs) (*boAcl.GetReply, error)
-	Update(ctx context.Context, args *boAcl.UpdateArgs) (*boAcl.UpdateReply, error)
+	Update(ctx context.Context, args *boAcl.UpdateArgs) error
 }
 
 func NewAcl(pack aclCtrlPack) AclCtrl {
@@ -63,19 +64,14 @@ func (ctrl *aclCtrl) Get(ctx context.Context, args *boAcl.GetArgs) (*boAcl.GetRe
 	return nil, nil
 }
 
-func (ctrl *aclCtrl) Update(ctx context.Context, args *boAcl.UpdateArgs) (*boAcl.UpdateReply, error) {
+func (ctrl *aclCtrl) Update(ctx context.Context, args *boAcl.UpdateArgs) error {
 
 	aclDao := aclMongoDao.New(ctrl.pack.MongoByside)
-	aclRao := aclRedisDao.New(ctrl.pack.RedisByside)
-	err := aclDao.Update(ctx, args.User)
+
+	err := aclDao.Update(ctx, aclDaoModel.Query{args.Query.BulkUserArgs, args.Query.CreatedAt})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = aclRao.Set(ctx, args.User, time.Minute*5)
-	if err != nil {
-		return nil, err
-	}
-
-	return &boAcl.UpdateReply{}, nil
+	return nil
 }

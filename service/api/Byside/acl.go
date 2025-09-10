@@ -31,18 +31,6 @@ type aclApi struct {
 }
 
 func (api *aclApi) getAcl(ctx *gin.Context) {
-	//form := struct {
-	//	Username string `form:"username" valid:"required"`
-	//	Password string `form:"password" valid:"required"`
-	//}{}
-	//if err := ctx.BindQuery(&form); err != nil {
-	//	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid query params"})
-	//	return
-	//}
-	//if _, err := govalidator.ValidateStruct(form); err != nil {
-	//	ctx.JSON(http.StatusBadRequest, gin.H{"error": "username and password are required"})
-	//	return
-	//}
 	form := struct {
 		Username string `json:"username" valid:"required"`
 		Password string `json:"password" valid:"required"`
@@ -69,27 +57,8 @@ func (api *aclApi) getAcl(ctx *gin.Context) {
 }
 
 func (api *aclApi) updateAcl(ctx *gin.Context) {
-	//form := struct {
-	//	Username string   `form:"username" valid:"required"`
-	//	Password string   `form:"password" valid:"required"`
-	//	Roles    []string `form:"roles" valid:"required"`
-	//	CreateAt int64    `form:"createAt" valid:"required"`
-	//	UpdateAt int64    `form:"updateAt" valid:"required"`
-	//}{}
-	//if err := ctx.BindQuery(&form); err != nil {
-	//	ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid query params"})
-	//	return
-	//}
-	//if _, err := govalidator.ValidateStruct(form); err != nil {
-	//	ctx.JSON(http.StatusBadRequest, gin.H{"error": "username and password are required"})
-	//	return
-	//}
 	form := struct {
-		Username string   `json:"username" valid:"required"`
-		Password string   `json:"password" valid:"required"`
-		Roles    []string `json:"roles" valid:"required"`
-		CreateAt int64    `json:"createAt" valid:"required"`
-		UpdateAt int64    `json:"updateAt" valid:"required"`
+		BulkUsers []aclDaoModel.BulkUserArg `json:"bulkUsers" valid:"required"`
 	}{}
 
 	if err := ctx.BindJSON(&form); err != nil {
@@ -98,21 +67,17 @@ func (api *aclApi) updateAcl(ctx *gin.Context) {
 	}
 
 	user := &boAcl.UpdateArgs{
-		User: aclDaoModel.User{
-			Username:  form.Username,
-			Password:  form.Password,
-			Roles:     form.Roles,
-			CreatedAt: time.Unix(form.CreateAt, 0),
-			UpdatedAt: time.Unix(form.UpdateAt, 0),
+		Query: aclDaoModel.Query{
+			BulkUserArgs: form.BulkUsers,
+			CreatedAt:    time.Now(),
 		},
 	}
 
-	result, err := api.pack.AclCtrl.Update(ctx, user)
+	err := api.pack.AclCtrl.Update(ctx, user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// 4. 成功回應
-	ctx.JSON(http.StatusOK, result)
+	ctx.Status(http.StatusOK)
 }
