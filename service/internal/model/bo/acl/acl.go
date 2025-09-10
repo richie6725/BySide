@@ -9,6 +9,11 @@ type GetArgs struct {
 type GetReply struct {
 	User aclDaoModel.User
 }
+
+type GetLoginReply struct {
+	Session aclDaoModel.UserSession
+}
+
 type UpdateArgs struct {
 	Query aclDaoModel.Query
 }

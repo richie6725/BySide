@@ -16,6 +16,7 @@ func NewAcl(pack aclApiPack) {
 	{
 		group.GET("status", c.getAcl)
 		group.POST("status", c.updateAcl)
+		group.GET("status", c.login)
 	}
 
 }
@@ -30,6 +31,7 @@ type aclApi struct {
 	pack aclApiPack
 }
 
+// 用於mongoDB抓使用者資料
 func (api *aclApi) getAcl(ctx *gin.Context) {
 	form := struct {
 		Username string `json:"username" valid:"required"`
@@ -48,6 +50,32 @@ func (api *aclApi) getAcl(ctx *gin.Context) {
 		}}
 
 	result, err := api.pack.AclCtrl.Get(ctx, user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (api *aclApi) login(ctx *gin.Context) {
+	form := struct {
+		Username string `json:"username" valid:"required"`
+		Password string `json:"password" valid:"required"`
+	}{}
+
+	if err := ctx.BindJSON(&form); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid json body"})
+		return
+	}
+
+	user := &boAcl.GetArgs{
+		User: aclDaoModel.User{
+			Username: form.Username,
+			Password: form.Password,
+		}}
+
+	result, err := api.pack.AclCtrl.GetLogin(ctx, user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
