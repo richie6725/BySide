@@ -43,3 +43,8 @@ type BulkUserArg struct {
 	Sex          string `bson:"sex" json:"sex"`
 	Birthday     string `bson:"birthday" json:"birthday"`
 }
+
+type UserWithMeta struct {
+	BulkUserArg `bson:",inline"`
+	CreatedAt   time.Time `bson:"created_at"`
+}

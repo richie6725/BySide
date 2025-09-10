@@ -82,7 +82,10 @@ func (dao *aclDao) Update(ctx context.Context, query aclDaoModel.Query) error {
 		if len(filter) == 0 {
 			return fmt.Errorf("missing pk, model: %+v", query.BulkUserArgs[i])
 		}
-		doc := bson.M{"$set": query.BulkUserArgs[i]}
+		doc := bson.M{"$set": aclDaoModel.UserWithMeta{
+			BulkUserArg: query.BulkUserArgs[i],
+			CreatedAt:   query.CreatedAt,
+		}}
 		writes[i] = mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(doc).SetUpsert(true)
 
 	}
