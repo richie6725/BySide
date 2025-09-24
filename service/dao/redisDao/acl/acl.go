@@ -11,7 +11,7 @@ import (
 )
 
 type AclRedisDao interface {
-	Get(ctx context.Context, username string) (*aclDaoModel.UserSession, error)
+	Get(ctx context.Context, username string, token string) (*aclDaoModel.UserSession, error)
 	Set(ctx context.Context, acl aclDaoModel.UserSession, expiration time.Duration) error
 }
 
@@ -28,12 +28,13 @@ type aclRedisDao struct {
 	client    *redis.Client
 }
 
-func (dao *aclRedisDao) buildAclKey(username string) string {
-	return fmt.Sprintf("%s:%s", dao.prefixKey, username)
+func (dao *aclRedisDao) buildAclKey(username string, token string) string {
+
+	return fmt.Sprintf("%s:%s:%s", dao.prefixKey, username, token)
 }
 
-func (dao *aclRedisDao) Get(ctx context.Context, username string) (*aclDaoModel.UserSession, error) {
-	key := dao.buildAclKey(username)
+func (dao *aclRedisDao) Get(ctx context.Context, username string, token string) (*aclDaoModel.UserSession, error) {
+	key := dao.buildAclKey(username, token)
 	a, err := dao.client.Get(ctx, key).Bytes()
 	if err != nil {
 		return nil, nil
@@ -49,7 +50,7 @@ func (dao *aclRedisDao) Get(ctx context.Context, username string) (*aclDaoModel.
 
 func (dao *aclRedisDao) Set(ctx context.Context, acl aclDaoModel.UserSession, expiration time.Duration) error {
 
-	key := dao.buildAclKey(acl.Username)
+	key := dao.buildAclKey(acl.Username, acl.Token)
 
 	compressed, err := dao.compressAcl(&acl)
 	if err != nil {

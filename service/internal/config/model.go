@@ -15,6 +15,7 @@ type ServiceAddress struct {
 type DatabaseManageSystem struct {
 	MongoDBSystem map[string]MongoDB `mapstructure:"MongoDB"`
 	RedisServer   map[string]Redis   `mapstructure:"Redis"`
+	MariaDBServer map[string]MariaDB `mapstructure:"MariaDB"`
 }
 
 type MongoDB struct {
@@ -30,4 +31,15 @@ type Redis struct {
 	Port     string `mapstructure:"Port"`
 	Password string `mapstructure:"Password"`
 	Database int    `mapstructure:"Database"`
+}
+
+type MariaDB struct {
+	Host     string `mapstructure:"Host"`
+	Port     string `mapstructure:"Port"`
+	User     string `mapstructure:"User"`
+	Account  string `mapstructure:"Account"`
+	Password string `mapstructure:"Password"`
+	Database string `mapstructure:"Database"`
+	MaxIdle  int    `mapstructure:"MaxIdle"`
+	MaxOpen  int    `mapstructure:"MaxOpen"`
 }

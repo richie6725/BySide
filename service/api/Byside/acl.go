@@ -16,7 +16,7 @@ func NewAcl(pack aclApiPack) {
 	{
 		group.GET("status", c.getAcl)
 		group.POST("status", c.updateAcl)
-		group.GET("status", c.login)
+		group.GET("login", c.login)
 	}
 
 }
@@ -62,6 +62,7 @@ func (api *aclApi) login(ctx *gin.Context) {
 	form := struct {
 		Username string `json:"username" valid:"required"`
 		Password string `json:"password" valid:"required"`
+		Token    string `json:"token" valid:"-"`
 	}{}
 
 	if err := ctx.BindJSON(&form); err != nil {
@@ -73,6 +74,7 @@ func (api *aclApi) login(ctx *gin.Context) {
 		User: aclDaoModel.User{
 			Username: form.Username,
 			Password: form.Password,
+			Token:    form.Token,
 		}}
 
 	result, err := api.pack.AclCtrl.GetLogin(ctx, user)

@@ -16,6 +16,18 @@
         "Password": "",
         "Database": 0
       }
+    },
+    "MariaDB": {
+      "RichieMaria": {
+        "Host": "localhost",
+        "Port": "3306",
+        "Account": "richie",
+        "Password": "richiepass",
+        "Database": "mydb",
+        "MaxIdle": 3,
+        "MaxOpen": 8
+      }
+
     }
   },
 

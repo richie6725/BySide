@@ -28,6 +28,7 @@ type User struct {
 	Sex          string    `bson:"sex" json:"sex"`
 	Birthday     string    `bson:"birthday" json:"birthday"`
 	CreatedAt    time.Time `bson:"created_at" json:"created_at"`
+	Token        string    `bson:"token" json:"token"`
 }
 
 type Query struct {

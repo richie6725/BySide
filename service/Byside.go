@@ -3,6 +3,7 @@ package service
 import (
 	BysideApi "Byside/service/api/Byside"
 	"Byside/service/controller/aclCtrl"
+	"Byside/service/controller/noteCtrl"
 	"Byside/service/internal/config"
 	"Byside/service/internal/database"
 	"context"
@@ -73,6 +74,9 @@ func (srv *BysideServer) provideController(container *dig.Container) {
 	if err := container.Provide(aclCtrl.NewAcl); err != nil {
 		panic(err)
 	}
+	if err := container.Provide(noteCtrl.NewNote); err != nil {
+		panic(err)
+	}
 }
 
 func (srv *BysideServer) invokeApiRoutes(container *dig.Container) {
@@ -84,6 +88,9 @@ func (srv *BysideServer) invokeApiRoutes(container *dig.Container) {
 		panic(err)
 	}
 	if err := container.Invoke(BysideApi.NewAcl); err != nil {
+		panic(err)
+	}
+	if err := container.Invoke(BysideApi.NewNote); err != nil {
 		panic(err)
 	}
 }

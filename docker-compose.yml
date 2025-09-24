@@ -1,12 +1,16 @@
-version: '3.8'
-services:
-  mongo:
-    image: mongo:6.0
-    container_name: richie-mongoDB
-    ports:
-      - "27017:27017"
-    volumes:
-      - richie-mongoDB-data:/data/db
+version: "3.8"
 
-volumes:
-  mongo-data:
+services:
+  mysql:
+    image: mariadb:10.11
+    container_name: test-mariaDB
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: richie
+      MYSQL_PASSWORD: richiepass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql

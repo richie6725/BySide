@@ -55,7 +55,7 @@ func (ctrl *aclCtrl) GetLogin(ctx context.Context, args *boAcl.GetArgs) (*boAcl.
 	aclDao := aclMongoDao.New(ctrl.pack.MongoByside)
 	aclRao := aclRedisDao.New(ctrl.pack.RedisByside)
 
-	session, err := aclRao.Get(ctx, args.User.Username)
+	session, err := aclRao.Get(ctx, args.User.Username, args.User.Token)
 	if err != nil {
 		return nil, err
 	}
