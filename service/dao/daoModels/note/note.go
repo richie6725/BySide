@@ -1,6 +1,7 @@
 package noteDaoModel
 
 import (
+	daomodel "Byside/service/internal/database"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
@@ -44,8 +45,8 @@ const (
 )
 
 type Query struct {
-	BulkPriceRecordArgs []*PriceRecord
-	IsUpsert            bool
+	BulkPriceRecordArgs []PriceRecord
+	TimeInterval        daomodel.TimeInterval
 }
 
 // MongoDB document structure

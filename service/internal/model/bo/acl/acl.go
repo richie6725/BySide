@@ -7,15 +7,15 @@ type GetArgs struct {
 }
 
 type GetReply struct {
-	User aclDaoModel.User
+	User *aclDaoModel.User
 }
 
 type GetLoginReply struct {
-	Session aclDaoModel.UserSession
+	Session *aclDaoModel.UserSession
 }
 
 type UpdateArgs struct {
-	Query aclDaoModel.Query
+	Query *aclDaoModel.Query
 }
 
 type UpdateReply struct{}

@@ -45,7 +45,7 @@ func (ctrl *aclCtrl) Get(ctx context.Context, args *boAcl.GetArgs) (*boAcl.GetRe
 	}
 
 	if user != nil {
-		reply.User = *user
+		reply.User = user
 		return reply, nil
 	}
 
@@ -60,7 +60,7 @@ func (ctrl *aclCtrl) GetLogin(ctx context.Context, args *boAcl.GetArgs) (*boAcl.
 		return nil, err
 	}
 	if session != nil {
-		return &boAcl.GetLoginReply{Session: *session}, nil
+		return &boAcl.GetLoginReply{Session: session}, nil
 	}
 
 	user, err := aclDao.Get(ctx, args.User)
@@ -71,7 +71,7 @@ func (ctrl *aclCtrl) GetLogin(ctx context.Context, args *boAcl.GetArgs) (*boAcl.
 	if user != nil {
 		token := utils.GenerateToken()
 
-		session := aclDaoModel.UserSession{
+		session := &aclDaoModel.UserSession{
 			Username: user.Username,
 			Token:    token,
 		}

@@ -9,7 +9,7 @@ type GetArgs struct {
 }
 
 type GetReply struct {
-	Query noteDaoModel.Query
+	BulkPriceRecordArgs []*noteDaoModel.PriceRecord
 }
 
 type UpdateArgs struct {

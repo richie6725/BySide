@@ -21,6 +21,7 @@ type noteCtrlPack struct {
 
 type NoteCtrl interface {
 	Update(ctx context.Context, args *boNote.UpdateArgs) error
+	Get(ctx context.Context, args *boNote.GetArgs) (*boNote.GetReply, error)
 }
 
 func NewNote(pack noteCtrlPack) NoteCtrl {
@@ -38,4 +39,21 @@ func (ctrl *noteCtrl) Update(ctx context.Context, args *boNote.UpdateArgs) error
 	}
 
 	return nil
+}
+
+func (ctrl *noteCtrl) Get(ctx context.Context, args *boNote.GetArgs) (*boNote.GetReply, error) {
+	noteDao := noteMongoDao.New(ctrl.pack.MongoByside)
+
+	note, err := noteDao.Get(ctx, args.Query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &boNote.GetReply{
+		BulkPriceRecordArgs: note,
+	}
+
+	return reply, nil
+
 }

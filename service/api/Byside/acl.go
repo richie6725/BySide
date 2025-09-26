@@ -97,7 +97,7 @@ func (api *aclApi) updateAcl(ctx *gin.Context) {
 	}
 
 	user := &boAcl.UpdateArgs{
-		Query: aclDaoModel.Query{
+		Query: &aclDaoModel.Query{
 			BulkUserArgs: form.BulkUsers,
 			CreatedAt:    time.Now(),
 		},

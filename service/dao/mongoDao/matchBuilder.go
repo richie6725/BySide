@@ -111,6 +111,20 @@ func (q *MatchBuilder) AddQueries(value []bson.E) *MatchBuilder {
 	return q
 }
 
+func (q *MatchBuilder) AddBetween(key fieldName, start, end interface{}) *MatchBuilder {
+	rangeCond := bson.D{}
+	if start != nil {
+		rangeCond = append(rangeCond, bson.E{Key: "$gte", Value: start})
+	}
+	if end != nil {
+		rangeCond = append(rangeCond, bson.E{Key: "$lte", Value: end})
+	}
+	if len(rangeCond) > 0 {
+		q.queries = append(q.queries, bson.E{Key: key.String(), Value: rangeCond})
+	}
+	return q
+}
+
 func (q *MatchBuilder) Generate() []bson.E {
 	return q.queries
 }

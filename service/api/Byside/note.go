@@ -3,6 +3,7 @@ package BysideApi
 import (
 	"Byside/service/controller/noteCtrl"
 	noteDaoModel "Byside/service/dao/daoModels/note"
+	daomodel "Byside/service/internal/database"
 	boNote "Byside/service/internal/model/bo/note"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,7 @@ func NewNote(pack noteApiPack) {
 	group := pack.Root.Group("note")
 	{
 		group.POST("updateNote", c.updateNote)
+		group.GET("getNote", c.getNote)
 	}
 
 }
@@ -63,4 +65,31 @@ func (api *noteApi) updateNote(ctx *gin.Context) {
 		return
 	}
 	return
+}
+
+func (api *noteApi) getNote(ctx *gin.Context) {
+
+	type body struct {
+		BulkPriceRecordArgs []noteDaoModel.PriceRecord `json:"price_records" valid:"required"`
+		TimeInterval        daomodel.TimeInterval      `json:"time_interval" valid:"required"`
+	}
+
+	var model body
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid json body"})
+		return
+	}
+
+	args := &boNote.GetArgs{
+		Query: noteDaoModel.Query{
+			BulkPriceRecordArgs: model.BulkPriceRecordArgs,
+			TimeInterval:        model.TimeInterval,
+		},
+	}
+	result, err := api.pack.NoteCtrl.Get(ctx, args)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	ctx.JSON(http.StatusOK, result)
 }

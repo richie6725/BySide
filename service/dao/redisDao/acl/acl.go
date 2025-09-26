@@ -12,7 +12,7 @@ import (
 
 type AclRedisDao interface {
 	Get(ctx context.Context, username string, token string) (*aclDaoModel.UserSession, error)
-	Set(ctx context.Context, acl aclDaoModel.UserSession, expiration time.Duration) error
+	Set(ctx context.Context, acl *aclDaoModel.UserSession, expiration time.Duration) error
 }
 
 func New(r *redis.Client) AclRedisDao {
@@ -48,11 +48,11 @@ func (dao *aclRedisDao) Get(ctx context.Context, username string, token string) 
 	return acl, nil
 }
 
-func (dao *aclRedisDao) Set(ctx context.Context, acl aclDaoModel.UserSession, expiration time.Duration) error {
+func (dao *aclRedisDao) Set(ctx context.Context, acl *aclDaoModel.UserSession, expiration time.Duration) error {
 
 	key := dao.buildAclKey(acl.Username, acl.Token)
 
-	compressed, err := dao.compressAcl(&acl)
+	compressed, err := dao.compressAcl(acl)
 	if err != nil {
 		return err
 	}
