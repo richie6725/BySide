@@ -54,14 +54,6 @@ func (dao *noteDao) Get(ctx context.Context, query noteDaoModel.Query) ([]*noteD
 	pipe := mongoDao.NewStageBuilder().
 		AddMatch(buildMatchQueries(query)).Generate()
 
-	doc := bson.D{{Key: "pipeline", Value: pipe}}
-	jsonPipeline, err := bson.MarshalExtJSON(doc, true, true)
-	if err != nil {
-		fmt.Printf("Failed to marshal pipeline to JSON: %v", err)
-	} else {
-		fmt.Printf("Mongo Pipeline: %s", jsonPipeline)
-	}
-
 	cursor, err := dao.collection.Aggregate(ctx, pipe)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute aggregation: %w", err)
