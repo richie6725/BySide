@@ -3,19 +3,19 @@ package database
 import (
 	"Byside/service/internal/config"
 	"fmt"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
 	"time"
 )
 
-func newMariaDB(dbName string, db config.MariaDB) *gorm.DB {
+func newPostgres(dbName string, db config.Postgres) *gorm.DB {
 	dataSourceName :=
-		fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&readTimeout=30s&writeTimeout=30s",
-			db.Account, db.Password, db.Host, db.Port, db.Database)
+		fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Taipei",
+			db.Host, db.Account, db.Password, db.Database, db.Port)
 
-	gormDB, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{
+	gormDB, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
@@ -36,7 +36,7 @@ func newMariaDB(dbName string, db config.MariaDB) *gorm.DB {
 	if err = sqlDB.Ping(); err != nil {
 		log.Fatalf("Error pinging database %s: %v", dbName, err)
 	}
-	log.Printf("Pinged successfully maria database: %s", dbName)
+	log.Printf("Pinged successfully postgres database: %s", dbName)
 
 	return gormDB
 }

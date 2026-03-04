@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  postgres-byside:
+    image: postgres:15-alpine
+    container_name: byside-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: richie
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: byside
+    ports:
+      - "5433:5432" # 正確：本機 5433 映射到容器 5432
+    volumes:
+      # 確保這個資料夾在你的 Mac 上已經存在，或 Docker 有權限建立它
+      - /Users/richie.lo/PostgreSQL_byside:/var/lib/postgresql/data
+    networks:
+      - byside-network
+
+networks:
+  byside-network:
+    driver: bridge
